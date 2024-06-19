@@ -1,0 +1,75 @@
+GET http://localhost:8081/events
+
+###
+# @name createEvent
+POST http://localhost:8081/events
+Content-Type: application/json
+
+{
+  "name": "New Event",
+  "description": "This is a new event",
+  "date": "2025-01-01T00:00:00",
+  "price": 100
+}
+
+###
+@eventId = {{  createEvent.response.body.id  }}
+
+###
+GET http://localhost:8081/events/{{ eventId }}
+
+###
+PATCH  http://localhost:8081/events/{{ eventId }}
+Content-Type: application/json
+
+{
+  "name": "New Event",
+  "description": "This is a new event",
+  "date": "2025-01-01T00:00:00",
+  "price": 200
+}
+
+###
+DELETE  http://localhost:8081/events/{{ eventId }}
+
+###
+GET http://localhost:8081/events/{{ eventId }}/spots
+
+###
+# @name createSpot
+POST http://localhost:8081/events/{{ eventId }}/spots
+Content-Type: application/json
+
+{
+  "name": "New Spot"
+}
+
+###
+@spotId = {{  createSpot.response.body.id  }}
+@spotName = {{  createSpot.response.body.name  }}
+
+###
+GET http://localhost:8081/events/{{ eventId }}/spots/{{ spotId }}
+
+###
+PATCH  http://localhost:8081/events/{{ eventId }}/spots/{{ spotId }}
+Content-Type: application/json
+
+{
+  "name": "New Spot",
+  "status": "reserved"
+}
+
+###
+DELETE  http://localhost:8081/events/{{ eventId }}/spots/{{ spotId }}
+
+###
+POST http://localhost:8082/events/{{ eventId }}/reserve
+Content-Type: application/json
+X-Api-Token: 123
+
+{
+  "spots": ["{{ spotName }}"],
+  "ticketKind": "full",
+  "email": "test@test.com"
+}
